@@ -1,3 +1,4 @@
+"=======================Generaxil================================
 filetype off                      " vundle required 'off' 
 filetype plugin indent on         " vundle required
 set nocompatible                  " be iMproved, vundle required
@@ -6,8 +7,8 @@ set nocompatible                  " be iMproved, vundle required
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936  "自适应文件编码,防止中文乱码
 set termencoding=utf-8
 set encoding=utf-8
-"set guifont=YaHei\ Consolas\ Hybrid\ 13   "雅黑字体
-set guifont=Source\ Code\ Pro\ 13   "adobe-font 
+"set guifont=YaHei\ Consolas\ Hybrid\ 14   "雅黑字体
+set guifont=Source\ Code\ Pro\ 14   "adobe-font 
 "set guifont=Monaco:h14:cANSI
 "set guifontwide=SimSun:h14:cGB2312 "宋体
   
@@ -15,10 +16,23 @@ set history=2000                  "记录历史行数2000
 let g:syntastic_ignore_files=[".*\.py$"]
 set autoindent
 let autosave=1
+set background=dark
+colorscheme solarized
+let g:rainbow_active = 1 "彩色括号
+set nowrap " 取消换行
+" 主题配置 solarized
+let g:solarized_termcolors=256
+let g:solarized_termtrans=1
+let g:solarized_contrast="normal"
+let g:solarized_visibility="normal"
+" 配色方案
+set background=dark
+set t_Co=256
+colorscheme solarized
 " 总是显示状态栏
 set laststatus=2
-" 状态行高度为(默认为1)
-set cmdheight=1
+" 状态行高度为2(默认为1)
+set cmdheight=2
 " 显示光标当前位置
 set ruler
 " 开启行号显示
@@ -37,8 +51,8 @@ set nospell
 set noshowmode
 
 
-" ---------- install Plugin using Vundle --------------------
-"Plugin 'junegunn/vim-plug'    "异步多线程插件管理器
+
+" ---------- install Plugin --------------------
 Plugin 'SirVer/ultisnips'
 Plugin 'iamcco/mathjax-support-for-mkdp'    "公式显示
 Plugin 'iamcco/markdown-preview.vim'        " markdown预览
@@ -47,6 +61,7 @@ Plugin 'jalcine/cmake.vim'
 Plugin 'pboettch/vim-cmake-syntax'
 Plugin 'Chiel92/vim-autoformat'             "Format code with one button press
 Plugin 'vim-scripts/DoxygenToolkit.vim'     "doxygen
+Plugin 'octol/vim-cpp-enhanced-highlight'
 "Plugin 'lilydjwg/fcitx.vim'                  "命令模式兼容中文
 "Plugin 'taketwo/vim-ros'                     "Vim with +python is required
 Plugin 'derekwyatt/vim-fswitch'
@@ -68,43 +83,46 @@ Plugin 'Valloric/MatchTagAlways' "highlight enclosing tags
 "Plugin 'tpope/vim-ragtag'
 "Plugin 'mbbill/echofunc'
 Plugin 'a.vim'   " 头文件和源文件相互切换
+
 set rtp+=/home/glm/.fzf/
-Plugin 'junegunn/fzf.vim'
-
-
+" 让配置变更立即生效
+"
 "----------------- install plugin using vim-plug---------------------------------"a
-" Specify a directory for plugins
-" - For Neovim: ~/.local/share/nvim/plugged
-" - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
 
-"Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/vim-easy-align'
 
+"Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+
+" Using a non-master branch
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 
 
-"Plug 'tpope/vim-pathogen'
-"Plug 'ludovicchabant/vim-gutentags'
+" Plugin outside ~/.vim/plugged with post-update hook
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'mbbill/undotree'
+" Unmanaged plugin (manually installed and updated)
+"Plug '~/my-prototype-plugin'
+Plug 'tpope/vim-pathogen'
+Plug 'ludovicchabant/vim-gutentags'
 "Plug 'w0rp/ale'
 "Plug 'mhinz/vim-signify'
-"Plug 'kana/vim-textobj-user'
-"Plug 'kana/vim-textobj-indent'
-"Plug 'kana/vim-textobj-syntax'
-"Plug 'kana/vim-textobj-function', { 'for':['c', 'cpp', 'vim', 'java'] }
-"Plug 'sgur/vim-textobj-parameter'
+Plug 'kana/vim-textobj-user'
+Plug 'kana/vim-textobj-indent'
+Plug 'kana/vim-textobj-syntax'
+Plug 'kana/vim-textobj-function', { 'for':['c', 'cpp', 'vim', 'java'] }
+Plug 'sgur/vim-textobj-parameter'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-"Plug 'Shougo/echodoc.vim'   "参数提示
+Plug 'Shougo/echodoc.vim'   "参数提示
+Plug 'junegunn/fzf.vim'
+
 "Plug 'octol/vim-cpp-enhanced-highlight'
 "Plug 'universal-ctags/ctags'
 call plug#end()
-
-"execute pathogen#infect()
-syntax on
-filetype plugin indent on
-" 让配置变更立即生效
+"
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
-" ========================complete==========================================
+
 "-------------YouCompleteMe-----------------------------------"
 "
 "" YCM 补全菜单配色
@@ -114,7 +132,6 @@ highlight Pmenu ctermfg=2 ctermbg=3 guifg=#005f87 guibg=#EEE8D5
 highlight PmenuSel ctermfg=2 ctermbg=3 guifg=#AFD700 guibg=#106900
 let g:spf13_bundle_groups=['general', 'youcompleteme']
 let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
-7
 let g:ycm_confirm_extra_conf=0      " 允许 vim 加载 .ycm_extra_conf.py 文件，不再提示  
 let g:ycm_collect_identifiers_from_tags_files = 1           " 开启 YCM 基于标签引擎
 let g:ycm_collect_identifiers_from_comments_and_strings = 1 " 注释与字符串中的内容也用于补全
@@ -134,7 +151,7 @@ let g:ycm_show_diagnostics_ui = 1                           " 使用语法检查
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>" |            " 回车即选中当前项
 nnoremap <c-j> :YcmCompleter GoToDefinitionElseDeclaration<CR>|     " 跳转到定义处
 nmap <F4> :YcmDiags<CR>
-let g:ycm_semantic_triggers = {'c,cpp,python,java,go,erlang,perl': ['re!\w{2}']}
+let g:ycm_semantic_triggers = {}
 let g:ycm_semantic_triggers.c = ['->', '.', '(', '[', '&']
 
 " YCM 集成 OmniCppComplete 补全引擎，设置其快捷键  
@@ -145,57 +162,20 @@ let g:ycm_min_num_of_chars_for_completion=2
 let g:ycm_cache_omnifunc=0  " 禁止缓存匹配项，每次都重新生成匹配项  
 let g:ycm_seed_identifiers_with_syntax=1   " 语法关键字补全              
 let g:ycm_key_invoke_completion = '<M-;>'  " 修改对C函数的补全快捷键，默认是CTRL + space，修改为ALT + ;  
-let g:ycm_error_symbol = '✗'    " 设置转到定义处的快捷键为ALT + G，这个功能非常赞 
+let g:ycm_error_symbol = '✗'     
 let g:ycm_warning_symbol = '>*'
-nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
-nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
-nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
-nnoremap <leader>gh :YcmCompleter GoToInclude<CR>
-nnoremap <leader>fi :YcmCompleter FixIt<CR>
-nnoremap <leader>gt :YcmCompleter GetType<CR>
-nnoremap <leader>ygd :YcmCompleter GetDoc<CR>
-let g:ycm_add_preview_to_completeopt = 0
-let g:ycm_show_diagnostics_ui = 0
-let g:ycm_server_log_level = 'info'
-let g:ycm_min_num_identifier_candidate_chars = 2
-let g:ycm_collect_identifiers_from_comments_and_strings = 1
-let g:ycm_complete_in_strings=1
-let g:ycm_key_invoke_completion = '<c-z>'
-set completeopt=menu,menuone
- 
-noremap <c-z> <NOP>
-let g:ycm_semantic_triggers =  {
-            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
-            \ 'cs,lua,javascript': ['re!\w{2}'],
-            \ }
-
- "------------------leaderF--------
-"let g:Lf_ShortcutF = '<c-p>'    "当前目录文件搜索
-"let g:Lf_ShortcutB = '<c-b>'    "最近打开的文件搜索 
-noremap <leader>lm :LeaderfMru<cr>
-noremap <leader>lf :LeaderfFunction!<cr> " function
-noremap  <leader>lb :LeaderfBuffer<cr>
-noremap <leader>lt :LeaderfTag<cr>  "tags
-let g:Lf_StlSeparator = { 'left': '', 'right': '', 'font': '' }
- 
-let g:Lf_RootMarkers = ['.project', '.root', '.svn', '.git']
-let g:Lf_WorkingDirectoryMode = 'Ac'
-let g:Lf_WindowHeight = 0.30
-let g:Lf_CacheDirectory = expand('~/.vim/cache')
-let g:Lf_ShowRelativePath = 0
-let g:Lf_HideHelp = 1
-let g:Lf_StlColorscheme = 'powerline'
-let g:Lf_PreviewResult = {'Function':0, 'BufTag':0}
-let g:Lf_Ctags='/usr/local/bin/ctags'  " use  universal-ctags
-
+nnoremap <leader>yl :YcmCompleter GoToDeclaration<CR>
+nnoremap <leader>yf :YcmCompleter GoToDefinition<CR>" 设置转到定义处的快捷键为ALT + G，这个功能非常赞
+nnoremap <leader>yg :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <leader>yf :YcmCompleter FixIt<CR>
+nnoremap <leader>yt :YcmCompleter GetType<CR>
+nnoremap <leader>yd :YcmCompleter GetDoc<CR>
 "======= for ros ======================="
+
 let g:ycm_semantic_triggers = {
  \ 'roslaunch' : ['="', '$(', '/'],
  \ 'rosmsg,rossrv,rosaction' : ['re!^', '/'],
  \ }
-
-
-
 
 au! BufRead,BufNewFile *.launch set filetype=xml
 
@@ -215,7 +195,6 @@ highlight clear SpellRare
 highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
-
 
 
 "---------------- airlinetheme --------"
@@ -279,10 +258,12 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_enable_highlighting=1
 "让syntastic支持C++11
 let g:syntastic_cpp_compiler_options = '-std=c++11 -stdlib=libc++'
+
+
 "-------------ctags------------------------
-set tags+=~/.ctags.d/ctags/opencv
-set tags+=~/.ctags.d/ctags/pcl
-set tags+=~/.ctags.d/ctags/ros
+set tags+=~/.ctags/opencv
+set tags+=~/.ctags/pcl
+set tags+=~/.ctags/ros
 set tags+=~/.ctags/eigen
 set path+=/usr/include/pcl-1.7
 set path+=/usr/include/opencv2
@@ -291,7 +272,7 @@ set path+=/usr/include/c++/5
 autocmd BufEnter * silent! lcd %:p:h
 
 "----------------vim-autoformat-------------------------
-"noremap <F3> :Autoformat<CR>     
+noremap <F3> :Autoformat<CR>     " "
 let g:autoformat_autoindent = 0
 let g:autoformat_retab = 0
 let g:autoformat_remove_trailing_spaces = 1
@@ -318,10 +299,7 @@ autocmd FileType c,cpp,objc vnoremap <buffer><Leader>cf :ClangFormat<CR>
 "  exec formatcommand
 "endfunc
 
-"vim-cpp-enhanced-highlight"
-let g:cpp_class_scope_highlight = 1
-let g:cpp_member_variable_highlight = 1
-let g:cpp_class_decl_highlight = 1
+
 
 "-------------doxygen toolkit--------------------------"
 let g:DoxygenToolkit_briefTag_pre="\\brief @b "  " :Dox
@@ -336,7 +314,7 @@ let g:doxygen_enhanced_color = 1
 
 
 ":DoxLic
-let s:licenseTag = "Copyright(C) www.\<enter>"    
+let s:licenseTag = "Copyright(C) www.robosense.ai\<enter>"    
 let s:licenseTag = s:licenseTag . "2017-   Technology Co., Ltd..\<enter>"
 let s:licenseTag = s:licenseTag . "All right reserved\<enter>"
 let s:licenseTag = s:licenseTag . "版权声明\<enter>"
@@ -387,7 +365,7 @@ let g:cpp_no_function_highlight = 1
 " youdao translater  有道词典
 vnoremap <silent> <C-T> :<C-u>Ydv<CR>
 nnoremap <silent> <C-T> :<C-u>Ydc<CR>
-noremap <leader>yd :<C-u>Yde<CR>
+noremap <leader>t :<C-u>Yde<CR>
 
 xnoremap p pgvy   " 多次粘贴
 
@@ -401,10 +379,19 @@ if exists(":Tabularize")
   vmap <Leader>a: :Tabularize /:\zs<CR>
 endif
 
+"
+"let g:loaded_syntastic_cpp_avrgcc_checker = 1
+"let g:loaded_syntastic_cpp_clang_check_checker = 1
+"let g:loaded_syntastic_cpp_clang_tidy_checker = 1
+"let g:loaded_syntastic_cpp_cppclean_checker = 1
+"let g:loaded_syntastic_cpp_cpplint_checker = 1
+"let g:loaded_syntastic_cpp_flawfinder_checker = 1
+"let g:loaded_syntastic_cpp_gcc_checker = 1
+"let g:loaded_syntastic_cpp_pc_lint_checker = 1
 
 " 自动载入vim的工程配置文件，用于找头文件
-if filereadable(".proj.vim")
-    source .proj.vim
+if filereadable("proj.vim")
+    source proj.vim
 endif
 
 
@@ -420,131 +407,42 @@ autocmd BufNewFile *.{h,hpp} call <SID>insert_gates()
 autocmd Bufwritepre,filewritepre *.c exe "1," . 10 . "g/Last Modified :.*/s/Last Modified :.*/Last Modified : " .strftime("%c")
 autocmd bufwritepost,filewritepost *.c execute "normal `a"
 
-" 设置 pullproto.pl 脚本路径
-"let g:protodefprotogetter='~/.vim/bundle/vim-protodef/pullproto.pl'
-" 成员函数的实现顺序与声明顺序一致  
-let g:disable_protodef_sorting=1
-"nmap <buffer> <silent> <leader> PP
-"nmap <buffer> <silent> <leader> PN
-let g:NERDTreeChDirMode = 2
 
-
-" Language:     PlantUML
-" Maintainer:   Aaron C. Meadows &lt; language name at shadowguarddev dot com&gt;
-" Last Change:  19-Jun-2012
-" Version:      0.1
-"
-"if exists("g:loaded_plantuml_plugin")
-    "finish
-"endif
-"let g:loaded_plantuml_plugin = 1
-
-"if !exists("g:plantuml_executable_script")
-        "let g:plantuml_executable_script='java -jar /usr/lib/plantuml.jar -tsvg'
-"endif
-"let s:makecommand=g:plantuml_executable_script." %"
-
-" define a sensible makeprg for plantuml files
-"autocmd Filetype plantuml let &l:makeprg=s:makecommand
 
 function <SID>FileHeading()
-  let s:header = "/** \<enter>"    
-  let s:header = s:header . "@Filename:  " .expand("%:t") ."\<enter>"
-  let s:header = s:header . "@Description:  \<enter>"
-  let s:header = s:header . "@Author:  Stone Guo\<enter>"
-  let s:header = s:header . "@Date:  " .strftime("%Y-%m-%d %H:%M:%S") ."\<enter>"
-  let s:header = s:header . "@Modified:   \<enter>"
-  let s:header = s:header . "@Version:  1.0.0"."\<enter>"
-  "let s:header = s:header . "\<enter>"
+  
+  let s:header = "/* ********************************************\<enter>"    
+  let s:header = s:header . "* @file:" .expand("%:t") ."\<enter>"
+  let s:header = s:header . "* @description:  \<enter>"
+  let s:header = s:header . "* @author: Stone Guo:    \<enter>"
+  let s:header = s:header . "* @date: " .strftime("%Y-%m-%d %H:%M:%S") ."\<enter>"
+  let s:header = s:header . "* @version: 1.0.0"."\<enter>"
+  let s:header = s:header . "* ******************************************\<enter>"
   exec "normal gg"  
   exec "normal O". s:header
   unlet s:header
 endfunction
-" 用户命令必须大些字母开头,Insert Header
-command! -nargs=0 InH :call <SID>FileHeading()
-" 真彩色
-"set termguicolors
+command! -nargs=0 Head :call <SID>FileHeading()
 
-set t_Co=256
-set background=dark
-colorscheme solarized
-let g:rainbow_active = 1 "彩色括号
-set nowrap " 取消换行
-let g:solarized_contrast="normal"
-let g:solarized_visibility="normal"
-" 配色方案
-set background=dark
-set t_Co=256
-colorscheme solarized
 
-if has('gui_running')
-    " GUI colors
-    let g:solarized_termtrans=1
-else
-    " Non-GUI (terminal) colors
-    " 主题配置 solarized
-let g:solarized_termcolors=256
-endif
 
-"-------------------tag-------------------"
-""runtime path manipulation
-"execute pathogen#infect()
-
-" gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
-"let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project', 'package.xml']
+" ================== project=======================
+" -------------------files-----------------------
+ "------------------leaderF--------
+let g:Lf_ShortcutF = '<c-p>'    "当前目录文件搜索"<leader>f"
+let g:Lf_ShortcutB = '<c-b>'    "最近打开的文件搜索 
+noremap <leader>lm :LeaderfMru<cr>
+noremap <leader>lf :LeaderfFunction!<cr> " function
+"noremap  <leader>lb :LeaderfBuffer<cr>
+noremap <leader>lt :LeaderfTag<cr>  "tags
+let g:Lf_StlSeparator = { 'left': '', 'right': '', 'font': '' }
  
-" 所生成的数据文件的名称
-"let g:gutentags_ctags_tagfile = '.tags'
- 
-" 将自动生成的 tags 文件全部放入 ~/.cache/tags 目录中，避免污染工程目录
-"let s:vim_tags = expand('~/.cache/tags')
-"let g:gutentags_cache_dir = s:vim_tags
-"let g:gutentags_ctags_exclude = ["*.min.js", "*.min.css", "build", "vendor", ".git", "node_modules", "*.vim/bundle/*"]
-" 配置 ctags 的参数
-"let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
-"let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
-"let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
-" 检测 ~/.cache/tags 不存在就新建
-"if !isdirectory(s:vim_tags)
-   "silent! call mkdir(s:vim_tags, 'p')
-"endif
-
-" -------------  异步模式--------------
-" 自动打开 quickfix window ，高度为 6
-"let g:asyncrun_open = 6
-" 任务结束时候响铃提醒
-"let g:asyncrun_bell = 1
- 
-" 设置 F10 打开/关闭 Quickfix 窗口
-"nnoremap <F10> :call asyncrun#quickfix_toggle(6)<cr>
-
-"let g:asyncrun_rootmarks = ['.svn', '.git', '.root',  'package.xml']
-"nnoremap <silent> <F7> :AsyncRun -cwd="${VIM_ROOT}/build" make <cr>
-"nnoremap <silent> <F8> :!catkin build --this <cr>
-
-"------------ ale --------------------------
-"let g:ale_enabled = 0  "disable
-"let g:ale_linters_explicit = 0
-"let g:ale_linters = { 'csh': ['shell'],   'zsh': ['shell'],  'c': ['gcc', 'cppcheck'],  'cpp': [ 'gcc' , 'cppcheck', 'clangcheck', 'clangtidy', 'cquery']   }
-  
-"let g:ale_completion_delay = 200
-"let g:ale_echo_delay = 20
-"let g:ale_lint_delay = 500
-"let g:ale_echo_msg_format = '[%linter%] %code: %%s'
-"let g:ale_lint_on_text_changed = 'normal'
-"let g:ale_lint_on_insert_leave = 1
-"let g:airline#extensions#ale#enabled = 1
- 
-"let g:ale_sign_error = '✗'
-"let g:ale_sign_warning = '⚠'
-"hi! clear SpellBad
-"hi! clear SpellCap
-"hi! clear SpellRare
-"hi! SpellBad gui=undercurl guisp=red
-"hi! SpellCap gui=undercurl guisp=blue
-"hi! SpellRare gui=undercurl guisp=magenta
-
-
-
-
-
+let g:Lf_RootMarkers = ['.project', '.root', '.svn', '.git']
+let g:Lf_WorkingDirectoryMode = 'Ac'
+let g:Lf_WindowHeight = 0.30
+let g:Lf_CacheDirectory = expand('~/.vim/cache')
+let g:Lf_ShowRelativePath = 0
+let g:Lf_HideHelp = 1
+let g:Lf_StlColorscheme = 'powerline'
+let g:Lf_PreviewResult = {'Function':0, 'BufTag':0}
+let g:Lf_Ctags='/usr/local/bin/ctags'  " use  universal-ctags
