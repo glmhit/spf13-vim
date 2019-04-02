@@ -53,11 +53,8 @@ set noshowmode
 
 
 " ---------- install Plugin --------------------
-Plugin 'SirVer/ultisnips'
 Plugin 'iamcco/mathjax-support-for-mkdp'    "公式显示
-Plugin 'iamcco/markdown-preview.vim'        " markdown预览
 Plugin 'Valloric/YouCompleteMe'             "代码补全插件
-Plugin 'jalcine/cmake.vim'
 Plugin 'pboettch/vim-cmake-syntax'
 Plugin 'Chiel92/vim-autoformat'             "Format code with one button press
 Plugin 'vim-scripts/DoxygenToolkit.vim'     "doxygen
@@ -66,15 +63,10 @@ Plugin 'octol/vim-cpp-enhanced-highlight'
 "Plugin 'taketwo/vim-ros'                     "Vim with +python is required
 Plugin 'derekwyatt/vim-fswitch'
 Plugin 'derekwyatt/vim-protodef'
-Plugin 'taglist.vim'
-Plugin 'c.vim'
-Plugin 'OmniCppComplete'
-Plugin 'mizuchi/stl-syntax'
 Plugin 'ybian/smartim' 
 "Plugin 'jbohren/roslaunch.vim'
 Plugin 'ianva/vim-youdao-translater'
 Plugin 'kana/vim-operator-user'
-Plugin 'rhysd/vim-clang-format'
 Plugin 'mhinz/vim-startify'   "启动画面
 Plugin 'spolu/dwm.vim' "Tiled Window Management
 Plugin 'Valloric/MatchTagAlways' "highlight enclosing tags 
@@ -84,11 +76,28 @@ Plugin 'Valloric/MatchTagAlways' "highlight enclosing tags
 "Plugin 'mbbill/echofunc'
 Plugin 'a.vim'   " 头文件和源文件相互切换
 
-set rtp+=/home/glm/.fzf/
+Plugin 'iamcco/markdown-preview.vim'        " markdown预览
+Plugin 'SirVer/ultisnips'
+Plugin 'OmniCppComplete'
+Plugin 'taglist.vim'
+Plugin 'rhysd/vim-clang-format'
+Plugin 'c.vim'
+Plugin 'mizuchi/stl-syntax'
+Plugin 'jalcine/cmake.vim'
+
+
 " 让配置变更立即生效
 "
 "----------------- install plugin using vim-plug---------------------------------"a
 call plug#begin('~/.vim/plugged')
+"Plug 'iamcco/markdown-preview.vim'        " markdown预览
+"Plug 'SirVer/ultisnips'
+"Plug 'OmniCppComplete'
+"Plug 'taglist.vim'
+"Plug 'rhysd/vim-clang-format'
+"Plug 'c.vim'
+"Plug 'mizuchi/stl-syntax'
+"Plug 'jalcine/cmake.vim'
 
 Plug 'junegunn/vim-easy-align'
 
@@ -119,6 +128,8 @@ Plug 'junegunn/fzf.vim'
 "Plug 'octol/vim-cpp-enhanced-highlight'
 "Plug 'universal-ctags/ctags'
 call plug#end()
+
+set rtp+=~/.fzf/
 "
 autocmd BufWritePost $MYVIMRC source $MYVIMRC
 
@@ -245,7 +256,7 @@ let g:syntastic_error_symbol='✗'
 " 设置警告符号
 let g:syntastic_warning_symbol='⚠'
 " 是否在打开文件时检查
-let g:syntastic_check_on_open=1
+let g:syntastic_check_on_open=0
 " 是否在保存文件后检查
 let g:syntastic_check_on_wq=0
 set statusline+=%#warningmsg#
@@ -427,6 +438,8 @@ command! -nargs=0 Head :call <SID>FileHeading()
 
 
 " ================== project=======================
+
+
 " -------------------files-----------------------
  "------------------leaderF--------
 let g:Lf_ShortcutF = '<c-p>'    "当前目录文件搜索"<leader>f"
@@ -446,3 +459,18 @@ let g:Lf_HideHelp = 1
 let g:Lf_StlColorscheme = 'powerline'
 let g:Lf_PreviewResult = {'Function':0, 'BufTag':0}
 let g:Lf_Ctags='/usr/local/bin/ctags'  " use  universal-ctags
+
+
+" gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
+let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+let g:gutentags_exclude_project_root = ['build']
+" 所生成的数据文件的名称
+let g:gutentags_ctags_tagfile = '.tags'
+
+
+" 配置 ctags 的参数
+let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+
+
