@@ -8,7 +8,7 @@ set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936  "自适应文件编码
 set termencoding=utf-8
 set encoding=utf-8
 "set guifont=YaHei\ Consolas\ Hybrid\ 14   "雅黑字体
-set guifont=Source\ Code\ Pro\ 14   "adobe-font 
+set guifont=Source\ Code\ Pro\ 13   "adobe-font 
 "set guifont=Monaco:h14:cANSI
 "set guifontwide=SimSun:h14:cGB2312 "宋体
   
@@ -112,8 +112,8 @@ Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 Plug 'mbbill/undotree'
 " Unmanaged plugin (manually installed and updated)
 "Plug '~/my-prototype-plugin'
-Plug 'tpope/vim-pathogen'
-Plug 'ludovicchabant/vim-gutentags'
+"Plug 'tpope/vim-pathogen'
+"Plug 'ludovicchabant/vim-gutentags'
 "Plug 'w0rp/ale'
 "Plug 'mhinz/vim-signify'
 Plug 'kana/vim-textobj-user'
@@ -142,7 +142,13 @@ highlight Pmenu ctermfg=2 ctermbg=3 guifg=#005f87 guibg=#EEE8D5
 " 选中项
 highlight PmenuSel ctermfg=2 ctermbg=3 guifg=#AFD700 guibg=#106900
 let g:spf13_bundle_groups=['general', 'youcompleteme']
-let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_python_interpreter_path = ''
+let g:ycm_python_sys_path = []
+let g:ycm_extra_conf_vim_data = [
+  \  'g:ycm_python_interpreter_path',
+  \  'g:ycm_python_sys_path'
+  \]
+let g:ycm_global_ycm_extra_conf='~/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf=0      " 允许 vim 加载 .ycm_extra_conf.py 文件，不再提示  
 let g:ycm_collect_identifiers_from_tags_files = 1           " 开启 YCM 基于标签引擎
 let g:ycm_collect_identifiers_from_comments_and_strings = 1 " 注释与字符串中的内容也用于补全
@@ -439,12 +445,23 @@ command! -nargs=0 Head :call <SID>FileHeading()
 
 " ================== project=======================
 
+" gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
+"let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+"let g:gutentags_exclude_project_root = ['build']
+" 所生成的数据文件的名称
+"let g:gutentags_ctags_tagfile = '.tags'
 
-" -------------------files-----------------------
+
+" 配置 ctags 的参数
+"let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+"let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+"let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+
  "------------------leaderF--------
 let g:Lf_ShortcutF = '<c-p>'    "当前目录文件搜索"<leader>f"
 let g:Lf_ShortcutB = '<c-b>'    "最近打开的文件搜索 
 noremap <leader>lm :LeaderfMru<cr>
+noremap <leader>f :LeaderfFile<cr>
 noremap <leader>lf :LeaderfFunction!<cr> " function
 "noremap  <leader>lb :LeaderfBuffer<cr>
 noremap <leader>lt :LeaderfTag<cr>  "tags
@@ -458,19 +475,53 @@ let g:Lf_ShowRelativePath = 0
 let g:Lf_HideHelp = 1
 let g:Lf_StlColorscheme = 'powerline'
 let g:Lf_PreviewResult = {'Function':0, 'BufTag':0}
-let g:Lf_Ctags='/usr/local/bin/ctags'  " use  universal-ctags
+"let g:Lf_Ctags='/usr/local/bin/ctags'  " use  universal-ctags
 
 
-" gutentags 搜索工程目录的标志，碰到这些文件/目录名就停止向上一级目录递归
-let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
-let g:gutentags_exclude_project_root = ['build']
-" 所生成的数据文件的名称
-let g:gutentags_ctags_tagfile = '.tags'
+"-----------------------------fzf---------------
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
 
+" Default fzf layout
+" - down / up / left / right
+let g:fzf_layout = { 'down': '~40%' }
 
-" 配置 ctags 的参数
-let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
-let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
-let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+" In Neovim, you can set up fzf window using a Vim command
+let g:fzf_layout = { 'window': 'enew' }
+let g:fzf_layout = { 'window': '-tabnew' }
+let g:fzf_layout = { 'window': '10split' }
 
+" Customize fzf colors to match your color scheme
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment'] }
 
+" Enable per-command history.
+" CTRL-N and CTRL-P will be automatically bound to next-history and
+" previous-history instead of down and up. If you don't like the change,
+" explicitly bind the keys to down and up in your $FZF_DEFAULT_OPTS.
+let g:fzf_history_dir = '~/.local/share/fzf-history'
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+
+" [[B]Commits] Customize the options used by 'git log':
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+" [Tags] Command to generate tags file
+let g:fzf_tags_command = 'ctags -R'
+
+" [Commands] --expect expression for directly executing the command
+let g:fzf_commands_expect = 'alt-enter,ctrl-x'
