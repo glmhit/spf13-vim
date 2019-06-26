@@ -122,9 +122,10 @@ Plug 'kana/vim-textobj-syntax'
 Plug 'kana/vim-textobj-function', { 'for':['c', 'cpp', 'vim', 'java'] }
 Plug 'sgur/vim-textobj-parameter'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-Plug 'Shougo/echodoc.vim'   "参数提示
+"Plug 'Shougo/echodoc.vim'   "参数提示
 Plug 'junegunn/fzf.vim'
 Plug 'tenfyzhong/CompleteParameter.vim' "参数补全
+"Plug 'xavierd/clang_complete'
 "Plug 'octol/vim-cpp-enhanced-highlight'
 "Plug 'universal-ctags/ctags'
 call plug#end()
@@ -148,6 +149,8 @@ let g:ycm_extra_conf_vim_data = [
   \  'g:ycm_python_interpreter_path',
   \  'g:ycm_python_sys_path'
   \]
+let g:neosnippet#disable_select_mode_mappings = 1
+
 let g:ycm_global_ycm_extra_conf='~/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf=0      " 允许 vim 加载 .ycm_extra_conf.py 文件，不再提示  
 let g:ycm_collect_identifiers_from_tags_files = 1           " 开启 YCM 基于标签引擎
@@ -162,9 +165,6 @@ let g:UltiSnipsExpandTrigger = "<tab>"
 let g:UltiSnipsJumpForwardTrigger = "<tab>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
 
-let g:ycm_complete_in_comments = 1                          " 在注释输入中也能补全
-let g:ycm_complete_in_strings = 1                           " 在字符串输入中也能补全
-let g:ycm_show_diagnostics_ui = 1                           " 使用语法检查
 inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>" |            " 回车即选中当前项
 nmap <F4> :YcmDiags<CR>
 let g:ycm_semantic_triggers = {}
@@ -177,15 +177,33 @@ set completeopt-=preview
 let g:ycm_min_num_of_chars_for_completion=2
 let g:ycm_cache_omnifunc=0  " 禁止缓存匹配项，每次都重新生成匹配项  
 let g:ycm_seed_identifiers_with_syntax=1   " 语法关键字补全              
-let g:ycm_key_invoke_completion = '<C-;>'  "   
+let g:ycm_key_invoke_completion = '<C-z>'  "  
+let g:ycm_add_preview_to_completeopt = 0
+let g:ycm_server_log_level = 'info'
+let g:ycm_complete_in_comments = 1                          " 在注释输入中也能补全
+let g:ycm_complete_in_strings = 1                           " 在字符串输入中也能补全
+let g:ycm_show_diagnostics_ui = 0                           " 使用语法检查
+
+let g:ycm_min_num_identifier_candidate_chars = 2
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+set completeopt=menu,menuone
 let g:ycm_error_symbol = '✗'     
 let g:ycm_warning_symbol = '>*'
 nnoremap <leader>yl :YcmCompleter GoToDeclaration<CR>
-nnoremap <leader>yf :YcmCompleter GoToDefinition<CR>" 设置转到定义处的快捷键为ALT + G，这个功能非常赞
+nnoremap <leader>ym :YcmCompleter GoToDefinition<CR>" 
 nnoremap <leader>yg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <leader>yf :YcmCompleter FixIt<CR>
 nnoremap <leader>yt :YcmCompleter GetType<CR>
-nnoremap <leader>yd :YcmCompleter GetDoc<CR>
+nnoremap <leader>yd :YcmCompleter GetDoc<CR> 
+let g:ycm_filetype_whitelist = { 
+			\ "c":1,
+			\ "cpp":1, 
+			\ "objc":1,
+      \ "python":1,
+			\ "sh":1,
+			\ "zsh":1,
+			\ "zimbu":1,
+			\ }
 "======= for ros ======================="
 
 let g:ycm_semantic_triggers = {
@@ -276,7 +294,7 @@ let g:syntastic_enable_highlighting=1
 let g:syntastic_cpp_compiler_options = '-std=c++11 -stdlib=libc++'
 
 
-"-------------ctags------------------------
+"-------------ctags------------------------ 
 set tags+=~/.ctags/opencv.tags
 set tags+=~/.ctags/pcl.tags
 set tags+=~/.ctags/ros.tags
@@ -529,12 +547,44 @@ let g:fzf_commands_expect = 'alt-enter,ctrl-x'
 
 
 " ---------- complete_parameter ---------------
+" !注意 此插件在ycm配置正确的情况下才能工作
 "
+set conceallevel=2
+set concealcursor=vin
+let g:clang_snippets=1
+let g:clang_conceal_snippets=1
+" The single one that works with clang_complete
+let g:clang_snippets_engine='clang_complete'
+"let g:complete_parameter_log_level=0  "for debug 
+" Complete options (disable preview scratch window, longest removed to aways
+" show menu)
+set completeopt=menu,menuone
+
+" Limit popup menu height
+set pumheight=20
+
+
 let g:neosnippet#disable_select_mode_mappings = 0
+" SuperTab completion fall-back 
+let g:SuperTabDefaultCompletionType='<c-x><c-u><c-p>'
 let g:AutoPairs = {'[':']', '{':'}',"'":"'",'"':'"', '`':'`'}
-inoremap <buffer><silent> ) <C-R>=AutoPairsInsert(')')<CR>
 inoremap <silent><expr> ( complete_parameter#pre_complete("()")
-smap <c-j> <Plug>(complete_parameter#goto_next_parameter)
-imap <c-j> <Plug>(complete_parameter#goto_next_parameter)
-smap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
-imap <c-k> <Plug>(complete_parameter#goto_previous_parameter)
+imap <expr>(
+            \ pumvisible() ?
+            \ complete_parameter#pre_complete("()") :
+            \ "\<Plug>delimitMate("
+smap <C-k> <Plug>(complete_parameter#goto_next_parameter)
+imap <C-k> <Plug>(complete_parameter#goto_next_parameter)
+"smap <C-k> <Plug>(complete_parameter#goto_previous_parameter)
+"imap <C-k> <Plug>(complete_parameter#goto_previous_parameter)
+inoremap <buffer><silent> ) <C-R>=AutoPairsInsert(')')<CR>
+
+ "path to directory where library can be found
+ "let g:clang_library_path='/usr/lib/llvm-6.0/lib/libclang-6.0.so.1'
+"set conceallevel=2
+"set concealcursor=vin
+"let g:clang_snippets=1
+"let g:clang_conceal_snippets=1
+"let g:clang_snippets_engine='clang_complete'
+
+
