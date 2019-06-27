@@ -122,12 +122,13 @@ Plug 'kana/vim-textobj-syntax'
 Plug 'kana/vim-textobj-function', { 'for':['c', 'cpp', 'vim', 'java'] }
 Plug 'sgur/vim-textobj-parameter'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-"Plug 'Shougo/echodoc.vim'   "参数提示
+Plug 'Shougo/echodoc.vim'   "参数提示
 Plug 'junegunn/fzf.vim'
 Plug 'tenfyzhong/CompleteParameter.vim' "参数补全
 "Plug 'xavierd/clang_complete'
 "Plug 'octol/vim-cpp-enhanced-highlight'
 "Plug 'universal-ctags/ctags'
+Plug 'derekwyatt/vim-fswitch'
 call plug#end()
 
 set rtp+=~/.fzf/
@@ -151,7 +152,7 @@ let g:ycm_extra_conf_vim_data = [
   \]
 let g:neosnippet#disable_select_mode_mappings = 1
 
-let g:ycm_global_ycm_extra_conf='~/.ycm_extra_conf.py'
+let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/third_party/ycmd/.ycm_extra_conf.py'
 let g:ycm_confirm_extra_conf=0      " 允许 vim 加载 .ycm_extra_conf.py 文件，不再提示  
 let g:ycm_collect_identifiers_from_tags_files = 1           " 开启 YCM 基于标签引擎
 let g:ycm_collect_identifiers_from_comments_and_strings = 1 " 注释与字符串中的内容也用于补全
@@ -182,7 +183,7 @@ let g:ycm_add_preview_to_completeopt = 0
 let g:ycm_server_log_level = 'info'
 let g:ycm_complete_in_comments = 1                          " 在注释输入中也能补全
 let g:ycm_complete_in_strings = 1                           " 在字符串输入中也能补全
-let g:ycm_show_diagnostics_ui = 0                           " 使用语法检查
+let g:ycm_show_diagnostics_ui = 1                           " 使用语法检查
 
 let g:ycm_min_num_identifier_candidate_chars = 2
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
@@ -195,6 +196,7 @@ nnoremap <leader>yg :YcmCompleter GoToDefinitionElseDeclaration<CR>
 nnoremap <leader>yf :YcmCompleter FixIt<CR>
 nnoremap <leader>yt :YcmCompleter GetType<CR>
 nnoremap <leader>yd :YcmCompleter GetDoc<CR> 
+nnoremap <leader>yh :YcmCompleter GoToInclude<CR>  "go to head file
 let g:ycm_filetype_whitelist = { 
 			\ "c":1,
 			\ "cpp":1, 
@@ -279,9 +281,9 @@ let g:syntastic_error_symbol='✗'
 " 设置警告符号
 let g:syntastic_warning_symbol='⚠'
 " 是否在打开文件时检查
-let g:syntastic_check_on_open=0
+let g:syntastic_check_on_open=1
 " 是否在保存文件后检查
-let g:syntastic_check_on_wq=0
+let g:syntastic_check_on_wq=1   ":lclose   close the loc_list
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
 set statusline+=%*
@@ -292,9 +294,18 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_enable_highlighting=1
 "让syntastic支持C++11
 let g:syntastic_cpp_compiler_options = '-std=c++11 -stdlib=libc++'
+"
+"let g:loaded_syntastic_cpp_avrgcc_checker = 1
+let g:loaded_syntastic_cpp_clang_check_checker = 1
+let g:loaded_syntastic_cpp_clang_tidy_checker = 1
+let g:loaded_syntastic_cpp_cppclean_checker = 1
+let g:loaded_syntastic_cpp_cpplint_checker = 1
+let g:loaded_syntastic_cpp_flawfinder_checker = 1
+let g:loaded_syntastic_cpp_gcc_checker = 1
+let g:loaded_syntastic_cpp_pc_lint_checker = 1
 
 
-"-------------ctags------------------------ 
+"-------------ctags------------------------
 set tags+=~/.ctags/opencv.tags
 set tags+=~/.ctags/pcl.tags
 set tags+=~/.ctags/ros.tags
@@ -415,15 +426,6 @@ if exists(":Tabularize")
   vmap <Leader>a: :Tabularize /:\zs<CR>
 endif
 
-"
-"let g:loaded_syntastic_cpp_avrgcc_checker = 1
-"let g:loaded_syntastic_cpp_clang_check_checker = 1
-"let g:loaded_syntastic_cpp_clang_tidy_checker = 1
-"let g:loaded_syntastic_cpp_cppclean_checker = 1
-"let g:loaded_syntastic_cpp_cpplint_checker = 1
-"let g:loaded_syntastic_cpp_flawfinder_checker = 1
-"let g:loaded_syntastic_cpp_gcc_checker = 1
-"let g:loaded_syntastic_cpp_pc_lint_checker = 1
 
 " 自动载入vim的工程配置文件，用于找头文件
 if filereadable("proj.vim")
@@ -587,4 +589,12 @@ inoremap <buffer><silent> ) <C-R>=AutoPairsInsert(')')<CR>
 "let g:clang_conceal_snippets=1
 "let g:clang_snippets_engine='clang_complete'
 
+"  -------------vim-protodef -------------------
+" 设置 pullproto.pl 脚本路径
+let g:protodefprotogetter='~/.vim/bundle/vim-protodef/pullproto.pl'  
+" 成员函数的实现顺序与声明顺序一致  
+let g:disable_protodef_sorting=1 
+
+nmap <buffer> <silent> <leader> ;PP
+nmap <buffer> <silent> <leader> ;PN
 
